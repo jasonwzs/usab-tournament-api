@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Rankings</title>
+</head>
+<body>
+<h1>Player Rankings</h1>
+
+<form>
+    <label for="ageGroup">Age Group:</label>
+    <select id="ageGroup" onchange="fetchRankings()">
+        <option value="U19">U19</option>
+        <option value="U17">U17</option>
+        <option value="U15" selected>U15</option>
+        <option value="U13">U13</option>
+        <option value="U11">U11</option>
+    </select>
+
+    <label for="eventType">Event Type:</label>
+    <select id="eventType" onchange="fetchRankings()">
+        <option value="BS" selected>BS</option>
+        <option value="GS">GS</option>
+        <option value="BD">BD</option>
+        <option value="GD">GD</option>
+        <option value="XD">XD</option>
+    </select>
+
+    <label for="playerName">Filter by Player Name:</label>
+    <input type="text" id="playerName" oninput="filterRankings()">
+</form>
+
+<table border="1" id="rankingsTable">
+    <tr>
+        <th>Rank</th>
+        <th>USAB ID</th>
+        <th>Player Name</th>
+        <th>Event Type</th>
+        <th>Total Scores</th>
+    </tr>
+</table>
+
+<script>
+    function fetchRankings() {
+        var ageGroup = document.getElementById('ageGroup').value;
+        var eventType = document.getElementById('eventType').value;
+
+        fetch(`/api/v1/ranks/current?age_group=${ageGroup}&event_type=${eventType}`)
+            .then(response => response.json())
+            .then(data => {
+                allRankings = data;
+                displayRankings(allRankings);
+            });
+    }
+
+    function filterRankings() {
+        var playerName = document.getElementById('playerName').value.toLowerCase();
+        var filteredRankings = allRankings.filter(ranking => ranking.player_name.toLowerCase().includes(playerName));
+        displayRankings(filteredRankings);
+    }
+
+    function displayRankings(rankings) {
+        var table = document.getElementById('rankingsTable');
+        table.innerHTML = '<tr><th>Rank</th><th>USAB ID</th><th>Player Name</th><th>Event Type</th><th>Total Scores</th></tr>';
+
+        rankings.forEach(function(ranking) {
+            var row = table.insertRow(-1);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+
+            cell1.innerHTML = ranking.rank;
+            cell2.innerHTML = ranking.usab_id;
+            cell3.innerHTML = ranking.player_name;
+            cell4.innerHTML = ranking.event_type;
+            cell5.innerHTML = ranking.total_scores;
+        });
+    }
+
+    // Initial fetch when the page loads
+    fetchRankings();
+</script>
+</body>
+</html>
