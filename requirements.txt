@@ -3,6 +3,7 @@ cachelib==0.9.0
 click==8.1.7
 Flask==3.0.2
 Flask-Caching==2.1.0
+Flask-Cors==4.0.0
 Flask-SQLAlchemy==3.1.1
 greenlet==3.0.3
 gunicorn==21.2.0

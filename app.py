@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
+from flask_cors import CORS
 from sqlalchemy import text
 import os
 from datetime import datetime
@@ -8,6 +9,7 @@ from datetime import datetime
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+CORS(app)  # Apply CORS to your Flask app
 
 # Configuration for Flask-SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'tournament.db')
